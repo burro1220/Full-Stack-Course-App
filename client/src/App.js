@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Route, Redirect, Switch, BrowserRouter } from "react-router-dom";
 import axios from 'axios';
 
 
@@ -7,23 +8,27 @@ import Header from './components/Header';
 import Courses from './components/Courses';
 
 
-const data = () => {
-  axios.get('http://localhost:5000/api/courses/')
-  .then( response => {
-    console.log(response);
-    return response;
-    
-  })
-};
-
-const info = data();
 
 
 
-function App() {
+class App extends Component {
+
+  state = {
+
+  }
+
+  render() {
   return (
-    <Courses />
-  );
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+          <Switch>
+            <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
+            <Route exact path="/courses" render={ () => <Courses /> } />
+          </Switch>
+      </div>
+    </BrowserRouter>
+  )};
 }
 
 export default App;

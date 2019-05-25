@@ -37,28 +37,22 @@ class Courses extends Component {
 render() {
     return(
         <div>
-        <Header />
+       
         <div className="bounds">  
             
             {/* Map over the courses and display data */}
             {this.state.courses.map(course => (
-
-                
 
                     <div className="grid-33">
                         <a className="course--module course--link" href="course-detail.html">
                             <h4 className="course--label">Course</h4>
                             <h3 className="course--title">{course.title}</h3>
                         </a>
-                    </div>
-                    
+                    </div>                
 
-                
-
-            ))}
+            ))}        
         
-        
-
+            {/* New Course link*/}
             <div className="grid-33">
                 <a className="course--module course--add--module" href="create-course.html">
                     <h3 className="course--add--title">
