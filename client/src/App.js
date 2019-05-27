@@ -7,7 +7,7 @@ import axios from 'axios';
 import Header from './components/Header';
 import Courses from './components/Courses';
 import CourseDetail from './components/CourseDetail';
-
+import UserSignIn from './components/UserSignIn';
 
 
 
@@ -26,7 +26,8 @@ class App extends Component {
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />
-            <Route exact path="/courses/:id" render={ (props) => <CourseDetail {...props} /> } />
+            <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
+            <Route path="/signin" render={ props => <UserSignIn /> } />
 
           </Switch>
       </div>
