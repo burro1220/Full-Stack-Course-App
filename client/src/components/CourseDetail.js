@@ -55,12 +55,23 @@ class CourseDetail extends Component {
                   <div className="grid-100"><span>
 
                     {/*  This component also renders an "Update Course" button for navigating to the "Update Course" screen. */}
-                    <Link className="button" to={this.props.match.url + "/update"}>Update Course</Link>
+                    <Link 
+                      className="button" 
+                      to={this.props.match.url + "/update"}>
+                      Update Course
+                    </Link>
                     
                     {/* The component renders a "Delete Course" button that when clicked should send a DELETE request to the REST API's /api/courses/:id route in order to delete a course. */}
-                    <a className="button" href="#">Delete Course</a></span>
+                    <Link 
+                      className="button" 
+                      to="">Delete Course
+                    </Link></span>
                    
-                    <Link className="button button-secondary" to="/">Return to List</Link>
+                    <Link 
+                      className="button button-secondary" 
+                      to="/">
+                      Return to List
+                    </Link>
                   </div>
                 </div>
               </div>
