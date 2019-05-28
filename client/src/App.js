@@ -28,11 +28,11 @@ class App extends Component {
   }
 
   //Handle Signing in
-  handleSignIn(e, email, password, err){
+  handleSignIn(email, password, err){
 
     //Prevent default request
     if(!email || !password) {
-      e.preventDefault();
+     // e.preventDefault();
     }
     console.log(`email: ${email} password: ${password}`);
     //Make request 
@@ -40,12 +40,11 @@ class App extends Component {
     
       //Set Authorization heaeder
       {
-        headers: {
-          auth: {
+        auth: {
             username: email,
             password: password
-          }
         }
+    
       }
     )
     //Upon response
