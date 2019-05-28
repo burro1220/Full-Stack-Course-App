@@ -5,13 +5,26 @@ import { Link } from "react-router-dom";
 //This component provides the "Sign In" screen by rendering a form that allows a user to sign using their existing account information. 
 class UserSignIn extends Component {
 
-    //Component State manages current user data
+    //Component State manages form changes
     state = {
 
         //initialize state to empty string
         emailAddress: '',
         password: ''
     };
+
+    //Handle changes to user input
+    handleInputChange = e => {
+        
+        //Grab reference to current input field
+        const inputField = e.target;
+
+        //Set state using input's name reference and field value
+        this.setState({
+            [inputField.name]: inputField.value
+        });
+    };
+
 
     render(){
         return(
@@ -20,15 +33,17 @@ class UserSignIn extends Component {
                 <div className="grid-33 centered signin">
                     <h1>Sign In</h1>
                     <div>
-                        <form>
+
+                        {/* On submit, pass input values and event into handleSignIn, available through props */}
+                        <form onSubmit= { e => this.props.handleSignIn(e, this.state.emailAddress, this.state.password)}>
                             <div>
                                 <input 
                                     id="emailAddress" 
                                     name="emailAddress" 
-                                    type="text" 
+                                    type="text"
+                                    onChange = {this.handleInputChange} 
                                     className="" 
-                                    placeholder="Email Address" 
-                                    value=""                                         
+                                    placeholder="Email Address"                                          
                                 />
                             </div>
                             <div>
@@ -36,9 +51,9 @@ class UserSignIn extends Component {
                                     id="password" 
                                     name="password" 
                                     type="password" 
+                                    onChange = {this.handleInputChange} 
                                     className="" 
                                     placeholder="Password" 
-                                    value="" 
                                 />
                             </div>
                             <div class="grid-100 pad-bottom">
