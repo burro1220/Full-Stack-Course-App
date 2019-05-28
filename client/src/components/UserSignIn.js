@@ -35,7 +35,7 @@ class UserSignIn extends Component {
                     <div>
 
                         {/* On submit, pass input values and event into handleSignIn, available through props */}
-                        <form onSubmit= { this.props.handleSignIn(this.state.emailAddress, this.state.password)}>
+                        <form onSubmit={e => this.props.handleSignIn(e, this.state.emailAddress, this.state.password)}>
                             <div>
                                 <input 
                                     id="emailAddress" 

@@ -28,13 +28,11 @@ class App extends Component {
   }
 
   //Handle Signing in
-  handleSignIn(email, password, err){
+  handleSignIn(e, email, password, err){
 
-    //Prevent default request
-    if(!email || !password) {
-     // e.preventDefault();
-    }
-    console.log(`email: ${email} password: ${password}`);
+    //Prevent default submission
+    e.preventDefault();
+
     //Make request 
     axios.get('http://localhost:5000/api/users',
     
@@ -48,12 +46,21 @@ class App extends Component {
       }
     )
     //Upon response
-    .then( response => {
-      console.log(response)
-      //check for response status success
-      if (response.status === 200){
+    .then( res => {
 
-        
+      
+      //check for response status success
+      if (res.status === 200){
+
+        //Grab reference to User Data
+        const user = res.data;
+
+        this.setState({
+          authUserData: user,
+          loggedIn: true
+        });
+
+
       }
     })
     //Catch error
