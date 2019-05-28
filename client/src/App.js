@@ -28,7 +28,12 @@ class App extends Component {
   }
 
   //Handle Signing in
-  handleSignIn(email, password){
+  handleSignIn(e, email, password, err){
+
+    //Prevent default request
+    if(!email || !password) {
+      e.preventDefault();
+    }
     console.log(`email: ${email} password: ${password}`);
     //Make request 
     axios.get('http://localhost:5000/api/users',
@@ -53,8 +58,8 @@ class App extends Component {
       }
     })
     //Catch error
-    //.catch(err);
-    //console.log(err);
+    .catch(err);
+    console.log(err);
   }
 
   //Handle Signing Out by setting authUserData back to empty object
