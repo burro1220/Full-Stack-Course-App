@@ -28,8 +28,8 @@ class App extends Component {
   }
 
   //Handle Signing in
-  handleSignIn(email, password, err){
-
+  handleSignIn(email, password){
+    console.log(`email: ${email} password: ${password}`);
     //Make request 
     axios.get('http://localhost:5000/api/users',
     
@@ -45,16 +45,16 @@ class App extends Component {
     )
     //Upon response
     .then( response => {
-
+      console.log(response)
       //check for response status success
       if (response.status === 200){
 
-        console.log(response)
+        
       }
     })
     //Catch error
-    .catch(err);
-    console.log(err);
+    //.catch(err);
+    //console.log(err);
   }
 
   //Handle Signing Out by setting authUserData back to empty object

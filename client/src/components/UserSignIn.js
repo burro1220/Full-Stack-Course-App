@@ -35,7 +35,7 @@ class UserSignIn extends Component {
                     <div>
 
                         {/* On submit, pass input values and event into handleSignIn, available through props */}
-                        <form onSubmit= { e => this.props.handleSignIn(e, this.state.emailAddress, this.state.password)}>
+                        <form onSubmit= { this.props.handleSignIn(this.state.emailAddress, this.state.password)}>
                             <div>
                                 <input 
                                     id="emailAddress" 
@@ -56,7 +56,7 @@ class UserSignIn extends Component {
                                     placeholder="Password" 
                                 />
                             </div>
-                            <div class="grid-100 pad-bottom">
+                            <div className="grid-100 pad-bottom">
 
                                 {/* The component renders a "Sign In" button that when clicked signs in the user */}
                                 <button 
