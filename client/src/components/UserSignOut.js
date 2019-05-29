@@ -1,11 +1,10 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+
 
 //Stateless functional component that doen't render any visual elements but signs out authenticated user
-const UserSignOut = props => {
+const UserSignOut = () => {
 
     return (
-        <h2>Signing Out Now...</h2>
+        null
     )
 
 };

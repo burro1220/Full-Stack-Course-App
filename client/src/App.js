@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Redirect, Switch, BrowserRouter, withRouter } from "react-router-dom";
 import axios from 'axios';
 
 
@@ -54,17 +54,20 @@ class App extends Component {
         //Grab reference to User Data
         const user = res.data;
 
+        //Set User data and loggedIn status
         this.setState({
           authUserData: user,
           loggedIn: true
         });
 
+        //Redirect user upon login
+        this.props.history.push("/courses");
 
       }
     })
     //Catch error
-    .catch(err);
-    console.log(err);
+    // .catch(err);
+    // console.log(err);
   }
 
   //Handle Signing Out by setting authUserData back to empty object
@@ -74,18 +77,14 @@ class App extends Component {
       loggedIn: false
     });
 
-    return (<Redirect
-      to={{
-        pathname: "/signin"
-      }}
-    />)
+    //Redirect user upon logout
+    this.props.history.push("/signin");
   }
 
 
   render() {
   return (
     
-    <BrowserRouter>
       <div className="App">
         <Header 
           loggedIn={this.state.loggedIn} 
@@ -113,9 +112,9 @@ class App extends Component {
 
           </Switch>
       </div>
-    </BrowserRouter>
+   
     
   )};
 }
 
-export default App;
+export default withRouter(App);
