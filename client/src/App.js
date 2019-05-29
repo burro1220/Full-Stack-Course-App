@@ -11,7 +11,6 @@ import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
-import UserSignOut from './components/UserSignOut';
 
 
 //Top-Level Component managing user log-in state
@@ -73,27 +72,43 @@ class App extends Component {
     this.setState({
       authUserData: {},
       loggedIn: false
-    })
+    });
+
+    return (<Redirect
+      to={{
+        pathname: "/signin"
+      }}
+    />)
   }
+
+
   render() {
   return (
     
     <BrowserRouter>
       <div className="App">
-        <Header />
+        <Header 
+          loggedIn={this.state.loggedIn} 
+          authUserData={this.state.authUserData}
+          signOut={this.handleSignOut.bind(this)} 
+        />
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />
             <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
             <Route path="/courses/create" render={ props => <CreateCourse /> } />
             <Route path="/courses/:id/update" render={ props => <UpdateCourse /> } />
-            <Route path="/signin" render={ props => 
+            <Route path="/signin" render={ () => 
               <UserSignIn 
                 handleSignIn = {this.handleSignIn.bind(this)}
               /> } 
             />
-            <Route path="/signup" render={ props => <UserSignUp /> } />
-            <Route path="/signout" render={ props => <UserSignOut /> } />
+            <Route path="/signout" render={ () => 
+              <Redirect to="/"
+              /> } 
+            />
+            <Route path="/signup" render={ () => <UserSignUp /> } />
+            
             
 
           </Switch>
