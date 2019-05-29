@@ -83,14 +83,15 @@ class App extends Component {
 
   render() {
   return (
-    <UserContext.Provider value={{
+    <UserContext.Provider 
+      value={{
         user: this.state.authUserData,
         signIn: this.handleSignIn.bind(this),
         signOut: this.handleSignOut.bind(this),
         loggedIn: this.state.loggedIn
         }}>
       <div className="App">
-        <Header/>
+        <Header />
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />

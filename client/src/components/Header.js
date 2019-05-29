@@ -2,8 +2,7 @@ import React from "react";
 import { Link, NavLink } from 'react-router-dom';
 import UserContext from './UserContext'
 
-const Header = () => {  
-    
+const Header = () => {     
    
     return  (
 
@@ -45,7 +44,7 @@ const Header = () => {
                                     </NavLink>
                                     <NavLink 
                                         className="signin" 
-                                        to="signin">
+                                        to="/signin">
                                         Sign In
                                     </NavLink>
                                 </nav>
