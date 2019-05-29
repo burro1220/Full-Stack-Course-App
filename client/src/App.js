@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Redirect, Switch, BrowserRouter, withRouter } from "react-router-dom";
 import axios from 'axios';
+import UserContext from './components/UserContext';
 
 
 //import components
@@ -77,42 +78,35 @@ class App extends Component {
       loggedIn: false
     });
 
-    //Redirect user upon logout
-    this.props.history.push("/signin");
   }
 
 
   render() {
   return (
-    
+    <UserContext.Provider value={{
+        user: this.state.authUserData,
+        signIn: this.handleSignIn.bind(this),
+        signOut: this.handleSignOut.bind(this),
+        loggedIn: this.state.loggedIn
+        }}>
       <div className="App">
-        <Header 
-          loggedIn={this.state.loggedIn} 
-          authUserData={this.state.authUserData}
-          signOut={this.handleSignOut.bind(this)} 
-        />
+        <Header/>
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />
             <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
             <Route path="/courses/create" render={ props => <CreateCourse /> } />
             <Route path="/courses/:id/update" render={ props => <UpdateCourse /> } />
-            <Route path="/signin" render={ () => 
-              <UserSignIn 
-                handleSignIn = {this.handleSignIn.bind(this)}
-              /> } 
-            />
+            <Route path="/signin" render={ () => <UserSignIn/> }  />
             <Route path="/signout" render={ () => 
-              <Redirect to="/"
+              <Redirect to="/signin"
               /> } 
             />
-            <Route path="/signup" render={ () => <UserSignUp /> } />
-            
-            
+            <Route path="/signup" render={ () => <UserSignUp /> } />     
 
-          </Switch>
+          </Switch>  
       </div>
-   
+    </UserContext.Provider>
     
   )};
 }
