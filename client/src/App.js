@@ -27,8 +27,8 @@ class App extends Component {
 
   }
 
-  //Handle Signing in
-  handleSignIn(e, email, password, err){
+//Handle Signing in
+handleSignIn(e, email, password, err){
 
     //Prevent default submission
     e.preventDefault();
@@ -71,18 +71,19 @@ class App extends Component {
     // console.log(err);
   }
 
-  //Handle Signing Out by setting authUserData back to empty object
-  handleSignOut(){
+
+
+//Handle Signing Out by setting authUserData back to empty object
+handleSignOut(){
     this.setState({
       authUserData: {},
       loggedIn: false
     });
 
-  }
+}
 
-
-  render() {
-  return (
+render() {
+return (
     <UserContext.Provider 
       value={{
         user: this.state.authUserData,
