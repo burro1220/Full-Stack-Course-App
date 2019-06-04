@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { runInNewContext } from 'vm';
 
 
 //This component provides the "Sign Up" screen by rendering a form that allows a user to sign up by creating a new account. 
@@ -38,29 +39,47 @@ class UserSignUp extends Component {
         //Prevent default submission
         e.preventDefault();
 
-        //Destructur
+        //Destructure
         const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
-    
-        //Make request 
-        axios.post('http://localhost:5000/api/users', { firstName, lastName, emailAddress, password, confirmPassword })
-        //Upon response
-        .then( res => {
-            console.log(res)
-        
-        //check for response status success
-        if (res.status === 200){
-    
-    
+
+        //Check if passwords match
+        if( password !== confirmPassword ) {
+
+            //Handle passwords don't match error
+            console.log('Passwords do not match');
+            
+            
+
+        } else {
+
+            //If Passwords match
+            //Make request 
+            axios.post('http://localhost:5000/api/users', { firstName, lastName, emailAddress, password })
+                
+            //Upon response
+                .then( res => {
+                    console.log(res)
+                
+                //check for response status success
+                if (res.status === 201){
+
+                    console.log(`User ${firstName} ${lastName} successfully created`);
+                    
+            
+            
+                }
+            })
+            //Catch error
+            // .catch(err);
+            // console.log(err);
         }
-        })
-        //Catch error
-        // .catch(err);
-        // console.log(err);
+    
+        
   }
 
     render() {
 
-        const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
+        const { firstName, lastName, emailAddress, password } = this.state;
         
         return(
                 <div className="bounds">
@@ -68,7 +87,7 @@ class UserSignUp extends Component {
                     <h1>Sign Up</h1>
                         <div>
                             {/* On submit, pass input values and event into handleSignIn, available through props */}
-                            <form onSubmit={e => this.handleSignUp(e, firstName, lastName, emailAddress, password, confirmPassword )}>
+                            <form onSubmit={e => this.handleSignUp(e, firstName, lastName, emailAddress, password )}>
                                 <div>
                                     <input 
                                         id="firstName" 
