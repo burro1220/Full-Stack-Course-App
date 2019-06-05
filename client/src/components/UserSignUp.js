@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
-import { runInNewContext } from 'vm';
+
 
 
 //This component provides the "Sign Up" screen by rendering a form that allows a user to sign up by creating a new account. 
@@ -34,7 +34,7 @@ class UserSignUp extends Component {
 
 
     //Handle Signing Up
-    handleSignUp(e, err){
+    handleSignUp(e){
 
         //Prevent default submission
         e.preventDefault();
@@ -64,14 +64,18 @@ class UserSignUp extends Component {
                 if (res.status === 201){
 
                     console.log(`User ${firstName} ${lastName} successfully created`);
+                    this.props.signIn(e, emailAddress, password);
+
                     
             
             
                 }
             })
             //Catch error
-            // .catch(err);
-            // console.log(err);
+            .catch(err => {
+                console.log(err)
+            });
+            
         }
     
         
@@ -171,4 +175,4 @@ class UserSignUp extends Component {
     }
 }
 
-export default UserSignUp;
+export default withRouter(UserSignUp);

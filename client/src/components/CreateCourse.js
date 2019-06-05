@@ -1,14 +1,61 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 //This component provides the "Create Course" screen by rendering a form that allows a user to create a new course.
 class CreateCourse extends Component {
 
     State = {
 
+        //Initalize empty state
+        id: '',
+        title: '',
+        description: '',
+        estimatedTime: '',
+        materialsNeeded: '',
+        validationErrors: []
     }
 
+    //Handle changes to user input
+    handleInputChange = e => {
+        
+        //Grab reference to current input field
+        const inputField = e.target;
+
+        //Set state using input's name reference and field value
+        this.setState({
+            [inputField.name]: inputField.value
+        });
+    };
+
+    //Handle Creating Course
+    handleCreateCourse(e){
+
+        //Prevent default submission
+        e.preventDefault();
+
+        //Destructure
+        const { title, description, estimatedTime, materialsNeeded } = this.state;
+
+        //Make request
+        axios.post('http://localhost:5000/api/courses', { title, description, estimatedTime, materialsNeeded })
+
+            //Upon response
+            .then( res => {
+
+                console.log(res)
+            })
+            .catch( err => {
+
+                console.log(err);
+            })
+        
+    };
+
     render(){
+
+        //Destructure
+        const { title, description, estimatedTime, materialsNeeded } = this.state;
 
         return (
 
@@ -24,7 +71,7 @@ class CreateCourse extends Component {
                                 </ul>
                             </div>
                         </div>
-                        <form>
+                        <form onSubmit={e => this.CreateCourse(e, title, description, estimatedTime, materialsNeeded)}>
                             <div className="grid-66">
                                 <div className="course--header">
                                     <h4 className="course--label">Course</h4>
@@ -35,7 +82,7 @@ class CreateCourse extends Component {
                                             type="text" 
                                             className="input-title course--title--input" 
                                             placeholder="Course title..."
-                                            value=""
+                                            onChange={this.handleInputChange}
                                         />
                                     </div>
                                     <p>By Joe Smith</p>
@@ -46,7 +93,8 @@ class CreateCourse extends Component {
                                                 id="description" 
                                                 name="description" 
                                                 className="" 
-                                                placeholder="Course description...">
+                                                placeholder="Course description..."
+                                                onChange={this.handleInputChange}>
                                             </textarea>
                                         </div>
                                     </div>
@@ -62,7 +110,7 @@ class CreateCourse extends Component {
                                                         name="estimatedTime" 
                                                         type="text" className="course--time--input"
                                                         placeholder="Hours" 
-                                                        value=""
+                                                        onChange={this.handleInputChange}
                                                     />
                                                 </div>
                                             </li>
@@ -73,7 +121,8 @@ class CreateCourse extends Component {
                                                         id="materialsNeeded" 
                                                         name="materialsNeeded" 
                                                         className="" 
-                                                        placeholder="List materials...">
+                                                        placeholder="List materials..."
+                                                        onChange={this.handleInputChange}>
                                                     </textarea>
                                                 </div>
                                             </li>

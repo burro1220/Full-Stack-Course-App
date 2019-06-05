@@ -28,7 +28,7 @@ class App extends Component {
   }
 
 //Handle Signing in
-handleSignIn(e, email, password, err){
+handleSignIn(e, email, password){
 
     //Prevent default submission
     e.preventDefault();
@@ -67,8 +67,10 @@ handleSignIn(e, email, password, err){
       }
     })
     //Catch error
-    // .catch(err);
-    // console.log(err);
+    .catch(err => {
+      console.log(err.response.data.message);
+    });
+    
   }
 
 
@@ -104,7 +106,7 @@ return (
               <Redirect to="/signin"
               /> } 
             />
-            <Route path="/signup" render={ () => <UserSignUp /> } />     
+            <Route path="/signup" render={ () => <UserSignUp signIn={this.handleSignIn.bind(this)} /> } />     
 
           </Switch>  
       </div>
