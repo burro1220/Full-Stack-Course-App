@@ -64,11 +64,7 @@ class UserSignUp extends Component {
                 if (res.status === 201){
 
                     console.log(`User ${firstName} ${lastName} successfully created`);
-                    this.props.signIn(e, emailAddress, password);
-
-                    
-            
-            
+                    this.props.signIn(null, emailAddress, password);           
                 }
             })
             //Catch error
@@ -76,9 +72,7 @@ class UserSignUp extends Component {
                 console.log(err)
             });
             
-        }
-    
-        
+        }       
   }
 
     render() {

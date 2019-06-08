@@ -31,7 +31,9 @@ class App extends Component {
 handleSignIn(e, email, password){
 
     //Prevent default submission
-    e.preventDefault();
+    if(e){
+      e.preventDefault();
+    }
 
     //Make request 
     axios.get('http://localhost:5000/api/users',
@@ -98,8 +100,8 @@ return (
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />
+            <Route exact path="/courses/create" render={ props => <CreateCourse /> } />
             <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
-            <Route path="/courses/create" render={ props => <CreateCourse /> } />
             <Route path="/courses/:id/update" render={ props => <UpdateCourse /> } />
             <Route path="/signin" render={ () => <UserSignIn/> }  />
             <Route path="/signout" render={ () => 
