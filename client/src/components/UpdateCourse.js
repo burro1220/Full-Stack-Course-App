@@ -1,13 +1,59 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 
 //This component provides the "Update Course" screen by rendering a form that allows a user to update one of their existing courses. 
 class UpdateCourse extends Component {
 
+    //Initialize state
     state = {
+
+        title:"",
+        description:"",
+        estimatedTime:"",
+        materialsNeeded:""
+    }
+
+    //Fetch Course info when CourseUpdate Component mounts
+    componentDidMount(){
+        this.handleGetCourse();
+        
+    };
+
+    //Handle changes to user input
+    handleInputChange = e => {
+        
+        //Grab reference to current input field
+        const inputField = e.target;
+
+        //Set state using input's name reference and field value
+        this.setState({
+            [inputField.name]: inputField.value
+        });
 
     }
 
+    //Get Course Data
+    handleGetCourse = () => {
+
+        //Request Data
+        axios.get('http://localhost:5000/api' + this.props.match.url)
+            
+            //Once data is received
+            .then( res => {
+                
+                //Grab desired data reference
+                const course = res.data;
+
+                //Set state to current course
+                this.setState({
+                    title: course.title,
+                    description: course.description,
+                    estimatedTime: course.estimatedTime,
+                    materialsNeeded: course.materialsNeeded
+                })
+            })
+    };
 
     render(){
 
@@ -26,8 +72,8 @@ class UpdateCourse extends Component {
                                         name="title" 
                                         type="text" 
                                         className="input-title course--title--input" 
-                                        placeholder="Course title..."
-                                        value="Build a Basic Bookcase" 
+                                        placeholder={this.state.title}
+                                        onChange={this.handleInputChange} 
                                     />
                                 </div>
                                 <p>By Joe Smith</p>
@@ -38,7 +84,8 @@ class UpdateCourse extends Component {
                                         id="description" 
                                         name="description" 
                                         className="" 
-                                        placeholder="Course description...">
+                                        placeholder="Course description..."
+                                        onChange={this.handleInputChange} >
                                     </textarea>
                                 </div>
                             </div>
@@ -54,7 +101,8 @@ class UpdateCourse extends Component {
                                                 name="estimatedTime" 
                                                 type="text" 
                                                 className="course--time--input"
-                                                placeholder="Hours" value="14 hours"
+                                                placeholder="Hours" 
+                                                onChange={this.handleInputChange} 
                                             />
                                         </div>
                                     </li>
@@ -65,7 +113,8 @@ class UpdateCourse extends Component {
                                                 id="materialsNeeded" 
                                                 name="materialsNeeded" 
                                                 className="" 
-                                                placeholder="List materials...">
+                                                placeholder="List materials..."
+                                                onChange={this.handleInputChange} >
                                             </textarea>
                                         </div>
                                     </li>

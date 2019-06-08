@@ -18,12 +18,12 @@ class CourseDetail extends Component {
 
     //Fetch Course info when CourseDetail Component mounts
     componentDidMount(){
-        this.getCourse();
+        this.handleGetCourse();
         
     };
 
     //Get Course Data
-    getCourse = () => {
+    handleGetCourse = () => {
 
         //Request Data
         axios.get('http://localhost:5000/api' + this.props.match.url)
@@ -47,6 +47,10 @@ class CourseDetail extends Component {
 
     render() {
 
+      //Destructure
+      const { title, description, estimatedTime, materialsNeeded } = this.state.course;
+      const { publishedBy } = this.state;
+
         return(
 
           <div>
@@ -64,7 +68,7 @@ class CourseDetail extends Component {
                     {/* The component renders a "Delete Course" button that when clicked should send a DELETE request to the REST API's /api/courses/:id route in order to delete a course. */}
                     <Link 
                       className="button" 
-                      to="">Delete Course
+                      to="/">Delete Course
                     </Link></span>
                    
                     <Link 
@@ -79,13 +83,13 @@ class CourseDetail extends Component {
                 <div className="grid-66">
                   <div className="course--header">
                     <h4 className="course--label">Course</h4>
-                    <h3 className="course--title">{this.state.course.title}</h3>
-                    <p>By {this.state.publishedBy}</p>
+                    <h3 className="course--title">{title}</h3>
+                    <p>By {publishedBy}</p>
                   </div>
                   <div className="course--description">
                     
                     {/* Use <ReactMarkdown> component to render the course description property as markdown formatted text. */}
-                    <ReactMarkDown source={this.state.course.description}/>
+                    <ReactMarkDown source={description}/>
                   </div>
                 </div>
                 <div className="grid-25 grid-right">
@@ -93,14 +97,14 @@ class CourseDetail extends Component {
                     <ul className="course--stats--list">
                       <li className="course--stats--list--item">
                         <h4>Estimated Time</h4>
-                        <h3>{this.state.course.estimatedTime}</h3>
+                        <h3>{estimatedTime}</h3>
                       </li>
                       <li className="course--stats--list--item">
                         <h4>Materials Needed</h4>
                         <ul>
 
                           {/* Use <ReactMarkdown> component to render the materialsNeeded property as markdown formatted text. */}
-                          <ReactMarkDown source={this.state.course.materialsNeeded}/>
+                          <ReactMarkDown source={materialsNeeded}/>
                         </ul>
                       </li>
                     </ul>

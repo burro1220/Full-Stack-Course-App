@@ -30,40 +30,39 @@ class CreateCourse extends Component {
     };
 
     //Handle Creating Course
-    handleCreateCourse(e){
+    handleCreateCourse(e, user){
 
         //Prevent default submission
         e.preventDefault();
 
         //Destructure
         const { title, description, estimatedTime, materialsNeeded } = this.state;
-        // const { _id, emailAddress, password } = user;
+        
+        //Make request
+        axios({
+            method: 'post',
+            url: 'http://localhost:5000/api/courses',
+            auth: {
+                username: user.emailAddress,
+                password: user.password
+            },
+            data: {
+                user: user.id,
+                title,
+                description,
+                estimatedTime,
+                materialsNeeded
+            }
+        })
+        //Upon Response
+        .then( res => {
 
-        // //Make request
-        // axios({
-        //     method: 'post',
-        //     url: 'http://localhost:5000/api/courses',
-        //     auth: {
-        //         username: emailAddress,
-        //         password
-        //     },
-        //     data: {
-        //         user: _id,
-        //         title,
-        //         description,
-        //         estimatedTime,
-        //         materialsNeeded
-        //     }
-        // })
-        // //Upon Response
-        // .then( res => {
+                console.log(res)
+            })
+            .catch( err => {
 
-        //         console.log(res)
-        //     })
-        //     .catch( err => {
-
-        //         console.log(err);
-        //     })
+                console.log(err.response.data);
+            })
         
     };
 
@@ -92,7 +91,7 @@ class CreateCourse extends Component {
                                         </ul>
                                     </div>
                                 </div>
-                                <form onSubmit={e => this.handleCreateCourse(e, title, description, estimatedTime, materialsNeeded)}>
+                                <form onSubmit={e => this.handleCreateCourse(e, user, title, description, estimatedTime, materialsNeeded)}>
                                     <div className="grid-66">
                                         <div className="course--header">
                                             <h4 className="course--label">Course</h4>

@@ -3,6 +3,8 @@ import { Route, Redirect } from 'react-router-dom';
 import UserContext from './UserContext';
 
 function PrivateRoute({ component: Component, ...rest }) {
+    
+    //Use Context to check state of loggedIn to only direct user to route if loggedIn, otherwise redirect to /signin
     return (
         <UserContext.Consumer>
             {({ loggedIn }) => (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect, Switch, BrowserRouter, withRouter } from "react-router-dom";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 import UserContext from './components/UserContext';
 
@@ -89,6 +89,8 @@ handleSignOut(){
 
 render() {
 return (
+
+    //Provide Context
     <UserContext.Provider 
       value={{
         user: this.state.authUserData,
@@ -99,18 +101,23 @@ return (
       <div className="App">
         <Header />
           <Switch>
+
+            {/* root route redirects to /courses */}
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
-            <Route exact path="/courses" render={ () => <Courses /> } />
-            <PrivateRoute exact path="/courses/create" render={ () => <CreateCourse /> } />
-            <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
-            <Route path="/courses/:id/update" render={ props => <UpdateCourse /> } />
+
+            {/* signing routes */}
             <Route path="/signin" render={ () => <UserSignIn/> }  />
             <Route path="/signout" render={ () => 
               <Redirect to="/signin"
               /> } 
             />
-            <Route path="/signup" render={ () => <UserSignUp signIn={this.handleSignIn.bind(this)} /> } />     
+            <Route path="/signup" render={ () => <UserSignUp signIn={this.handleSignIn.bind(this)} /> } />
 
+            {/* courses routes */} 
+            <Route exact path="/courses" render={ () => <Courses /> } />
+            <PrivateRoute exact path="/courses/create" component= {CreateCourse}   />
+            <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
+            <PrivateRoute path="/courses/:id/update" component= {UpdateCourse} />       
           </Switch>  
       </div>
     </UserContext.Provider>
