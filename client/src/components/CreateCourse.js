@@ -37,33 +37,33 @@ class CreateCourse extends Component {
 
         //Destructure
         const { title, description, estimatedTime, materialsNeeded } = this.state;
-        const { _id, emailAddress, password } = user;
+        // const { _id, emailAddress, password } = user;
 
-        //Make request
-        axios({
-            method: 'post',
-            url: 'http://localhost:5000/api/courses',
-            auth: {
-                username: emailAddress,
-                password
-            },
-            data: {
-                user: _id,
-                title,
-                description,
-                estimatedTime,
-                materialsNeeded
-            }
-        })
-        //Upon Response
-        .then( res => {
+        // //Make request
+        // axios({
+        //     method: 'post',
+        //     url: 'http://localhost:5000/api/courses',
+        //     auth: {
+        //         username: emailAddress,
+        //         password
+        //     },
+        //     data: {
+        //         user: _id,
+        //         title,
+        //         description,
+        //         estimatedTime,
+        //         materialsNeeded
+        //     }
+        // })
+        // //Upon Response
+        // .then( res => {
 
-                console.log(res)
-            })
-            .catch( err => {
+        //         console.log(res)
+        //     })
+        //     .catch( err => {
 
-                console.log(err);
-            })
+        //         console.log(err);
+        //     })
         
     };
 

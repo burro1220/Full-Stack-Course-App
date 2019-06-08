@@ -12,6 +12,7 @@ import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
+import PrivateRoute from './components/PrivateRoute';
 
 
 //Top-Level Component managing user log-in state
@@ -100,7 +101,7 @@ return (
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/courses" /> } />
             <Route exact path="/courses" render={ () => <Courses /> } />
-            <Route exact path="/courses/create" render={ props => <CreateCourse /> } />
+            <PrivateRoute exact path="/courses/create" render={ () => <CreateCourse /> } />
             <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
             <Route path="/courses/:id/update" render={ props => <UpdateCourse /> } />
             <Route path="/signin" render={ () => <UserSignIn/> }  />

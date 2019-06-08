@@ -17,7 +17,8 @@ class UserSignUp extends Component {
         lastName: '',
         emailAddress: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        validationErrors: []
     };
 
     //Handle changes to user input
