@@ -37,7 +37,7 @@ class CreateCourse extends Component {
 
         //Destructure
         const { title, description, estimatedTime, materialsNeeded } = this.state;
-        console.log(user);
+        console.log(user.password);
         
         //Make request
         axios({
