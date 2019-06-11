@@ -41,7 +41,7 @@ handleSignIn(e, email, password){
     //Make request 
     axios.get('http://localhost:5000/api/users',
     
-      //Set Authorization heaeder
+      //Set Authorization header
       {
         auth: {
             username: email,
@@ -64,7 +64,7 @@ handleSignIn(e, email, password){
         this.setState({
           authUserData: user,
           loggedIn: true,
-          password: user.password
+          password: password
         });
 
         //Redirect user upon login
@@ -85,7 +85,8 @@ handleSignIn(e, email, password){
 handleSignOut(){
     this.setState({
       authUserData: {},
-      loggedIn: false
+      loggedIn: false,
+      password: ''
     });
 
 }
