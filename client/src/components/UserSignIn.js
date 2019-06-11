@@ -11,7 +11,8 @@ class UserSignIn extends Component {
 
         //initialize state to empty string
         emailAddress: '',
-        password: ''
+        password: '',
+        validationErrors: []
     };
 
     //Handle changes to user input

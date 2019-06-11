@@ -24,7 +24,9 @@ class App extends Component {
     //Authenticated user data
     authUserData: {},
     //Authentication state
-    loggedIn: false
+    loggedIn: false,
+    //User Password
+    password: '',
 
   }
 
@@ -61,7 +63,8 @@ handleSignIn(e, email, password){
         //Set User data and loggedIn status
         this.setState({
           authUserData: user,
-          loggedIn: true
+          loggedIn: true,
+          password: user.password
         });
 
         //Redirect user upon login
@@ -94,6 +97,7 @@ return (
     <UserContext.Provider 
       value={{
         user: this.state.authUserData,
+        password: this.state.password,
         signIn: this.handleSignIn.bind(this),
         signOut: this.handleSignOut.bind(this),
         loggedIn: this.state.loggedIn
