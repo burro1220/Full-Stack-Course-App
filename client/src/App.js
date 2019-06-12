@@ -27,6 +27,8 @@ class App extends Component {
     loggedIn: false,
     //User Password
     password: '',
+    //Validation errors
+    validationErrors: ''
 
   }
 
@@ -74,6 +76,12 @@ handleSignIn(e, email, password){
     })
     //Catch error
     .catch(err => {
+      
+      const error = err.response.data.message;
+
+      this.setState({
+        validationErrors: error
+      })
       console.log(err.response.data.message);
     });
     
