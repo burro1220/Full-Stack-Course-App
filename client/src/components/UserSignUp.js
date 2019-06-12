@@ -18,7 +18,7 @@ class UserSignUp extends Component {
         emailAddress: '',
         password: '',
         confirmPassword: '',
-        validationErrors: []
+        validationErrors: ''
     };
 
     //Handle changes to user input
@@ -34,6 +34,13 @@ class UserSignUp extends Component {
     };
 
 
+    //Handle Cancel button
+    handleCancel = e => {
+        e.preventDefault();
+        this.props.history.push("/courses");
+      };
+
+
     //Handle Signing Up
     handleSignUp(e){
 
@@ -46,8 +53,9 @@ class UserSignUp extends Component {
         //Check if passwords match
         if( password !== confirmPassword ) {
 
-            //Handle passwords don't match error
-            console.log('Passwords do not match');
+            this.setState({
+                validationErrors: "Passwords do not match."
+            })
             
             
 
@@ -59,32 +67,57 @@ class UserSignUp extends Component {
                 
             //Upon response
                 .then( res => {
-                    console.log(res)
                 
                 //check for response status success
                 if (res.status === 201){
 
+                    //Print success message to console
                     console.log(`User ${firstName} ${lastName} successfully created`);
+
+                    //Reset validation errors
+                    this.setState({
+                        validationErrors: ''
+                    })
+
+                    //Automatically sign in User
                     this.props.signIn(null, emailAddress, password);           
                 }
             })
             //Catch error
             .catch(err => {
-                console.log(err)
+               
+                const error = err.response.data.message;
+                    
+                    this.setState({
+                        validationErrors: error
+                    })
             });
             
-        }       
+        } 
+        
+        
   }
 
     render() {
 
-        const { firstName, lastName, emailAddress, password } = this.state;
+        const { firstName, lastName, emailAddress, password, validationErrors } = this.state;
         
         return(
                 <div className="bounds">
                     <div className="grid-33 centered signin">
                     <h1>Sign Up</h1>
                         <div>
+                        {validationErrors?(
+                                    <div>
+                                        <h2 className="validation--errors--label">Validation errors</h2>
+                                        <div className="validation-errors">
+                                            <ul>
+                                                <li>{validationErrors}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ):""}
+
                             {/* On submit, pass input values and event into handleSignIn, available through props */}
                             <form onSubmit={e => this.handleSignUp(e, firstName, lastName, emailAddress, password )}>
                                 <div>
@@ -149,7 +182,8 @@ class UserSignUp extends Component {
                                     {/* This component also renders a "Cancel" button that returns the user to the default route (i.e. the list of courses). */}
                                     <button 
                                         className="button button-secondary" 
-                                        to='/'>
+                                        to="#"
+                                        onClick={this.handleCancel}>
                                         Cancel
                                     </button>
                                 </div>

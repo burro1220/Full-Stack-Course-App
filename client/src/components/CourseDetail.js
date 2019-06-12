@@ -46,11 +46,11 @@ class CourseDetail extends Component {
             .catch( err => {
               console.log(err);
             })
-    }
+    };
 
     handleDeleteCourse = (e, emailAddress, password) => {
 
-      //e.preventDefault();
+      e.preventDefault();
 
       //Request Deletion
       axios.delete('http://localhost:5000/api/courses/' + this.props.match.params.id,
@@ -66,7 +66,18 @@ class CourseDetail extends Component {
       .then( res => {
         console.log(res);
       })
-    }
+      .catch(err => {
+        
+        const error = err.response.data.message;
+        console.log(error);
+      })
+    };
+
+    //Handle Update button
+    handleToUpdateCourse = e => {
+      e.preventDefault();
+      this.props.history.push(this.props.match.url + "/update");
+    };
 
 
 
@@ -92,8 +103,9 @@ class CourseDetail extends Component {
                       <span>
                         {/*This component also renders an "Update Course" button for navigating to the "Update Course" screen.*/}
                         <Link 
-                          className="button" 
-                          to={this.props.match.url + "/update"}>
+                          className="button"
+                          to="#" 
+                          onClick={ e => this.handleToUpdateCourse(e)}>
                           Update Course
                         </Link>
                       
@@ -101,7 +113,7 @@ class CourseDetail extends Component {
                         <Link
                           className="button"
                           to='#'
-                          onClick={this.handleDeleteCourse(user.emailAddress, password )}>
+                          onClick={e => this.handleDeleteCourse(e, user.emailAddress, password)}>
                           Delete Course
                         </Link> 
                       </span>
