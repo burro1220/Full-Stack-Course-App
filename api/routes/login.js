@@ -40,7 +40,7 @@ module.exports = (req, res, next) => {
 
                     //Store User in request
                     req.currentUser = user;
-                    console.log(req);
+                    
                     //Advance to next middleware
                     next();
 

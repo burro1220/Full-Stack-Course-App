@@ -14,7 +14,7 @@ class CreateCourse extends Component {
         description: '',
         estimatedTime: '',
         materialsNeeded: '',
-        validationErrors: []
+        validationErrors: ''
     }
 
     //Handle changes to user input
@@ -36,34 +36,62 @@ class CreateCourse extends Component {
         e.preventDefault();
 
         //Destructure
-        const { title, description, estimatedTime, materialsNeeded} = this.state;
-        console.log(password);
+        const { title, description, estimatedTime, materialsNeeded } = this.state;
         
-        //Make request
-        axios({
-            method: 'post',
-            url: 'http://localhost:5000/api/courses',
-            auth: {
-                username: user.emailAddress,
-                password: password
-            },
-            data: {
-                user: user.id,
-                title,
-                description,
-                estimatedTime,
-                materialsNeeded
+        if(description === ''){
+            this.setState({
+                validationErrors: "A description must be entered"
+            })
+        } 
+        if(title === ''){
+            this.setState({
+                validationErrors: "A title must be entered"
+            })
+        }
+        else{
+            //Make request
+            axios({
+                method: 'post',
+                url: 'http://localhost:5000/api/courses',
+                auth: {
+                    username: user.emailAddress,
+                    password: password
+                },
+                data: {
+                    user: user.id,
+                    title,
+                    description,
+                    estimatedTime,
+                    materialsNeeded
+                }
+            })
+            //Upon Response
+            .then( res => {
+
+                    this.setState({
+                        id: '',
+                        title: '',
+                        description: '',
+                        estimatedTime: '',
+                        materialsNeeded: '',
+                        validationErrors: ''
+                    });
+                    
+                    //Redirect user upon login
+                    this.props.history.push("/courses");
+                })
+                .catch( err => {
+
+                    const error = err.response.data.message;
+                    
+                    this.setState({
+                        validationErrors: error
+                    })
+                })
             }
-        })
-        //Upon Response
-        .then( res => {
-
-                console.log(res)
-            })
-            .catch( err => {
-
-                console.log(err.response.data);
-            })
+            
+            
+        
         
     };
 
@@ -75,11 +103,11 @@ class CreateCourse extends Component {
     render(){
         
         //Destructure
-        const { title, description, estimatedTime, materialsNeeded } = this.state;
+        const { title, description, estimatedTime, materialsNeeded, validationErrors } = this.state;
 
         return (
             <UserContext.Consumer>
-                {( {user, password, validationErrors } ) => (
+                {( {user, password } ) => (
                     <div className="bounds course--detail">
                         <h1>Create Course</h1>
                             <div>
@@ -93,7 +121,6 @@ class CreateCourse extends Component {
                                     </div>
                                 </div>
                             ):""}
-                                
                                 <form onSubmit={e => this.handleCreateCourse(e, user, password, title, description, estimatedTime, materialsNeeded)}>
                                     <div className="grid-66">
                                         <div className="course--header">

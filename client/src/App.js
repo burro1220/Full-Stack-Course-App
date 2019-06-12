@@ -66,7 +66,8 @@ handleSignIn(e, email, password){
         this.setState({
           authUserData: user,
           loggedIn: true,
-          password: password
+          password: password,
+          validationErrors: ''
         });
 
         //Redirect user upon login
@@ -82,7 +83,7 @@ handleSignIn(e, email, password){
       this.setState({
         validationErrors: error
       })
-      console.log(err.response.data.message);
+      
     });
     
   }
@@ -109,7 +110,9 @@ return (
         password: this.state.password,
         signIn: this.handleSignIn.bind(this),
         signOut: this.handleSignOut.bind(this),
-        loggedIn: this.state.loggedIn
+        loggedIn: this.state.loggedIn,
+        validationErrors: this.state.validationErrors
+
         }}>
       <div className="App">
         <Header />
