@@ -133,7 +133,7 @@ return (
             <Route exact path="/courses" render={ () => <Courses /> } />
             <PrivateRoute exact path="/courses/create" component= {CreateCourse}   />
             <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
-            <PrivateRoute path="/courses/:id/update" component= {UpdateCourse} />       
+            <PrivateRoute exact path="/courses/:id/update" component= {UpdateCourse} />       
           </Switch>  
       </div>
     </UserContext.Provider>

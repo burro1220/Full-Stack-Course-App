@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 import ReactMarkDown from "react-markdown";
 import UserContext from "./UserContext";
@@ -15,6 +15,7 @@ class CourseDetail extends Component {
         courseId: "",
         createdBy: "",
         publishedBy: "",
+        validationErrors: ""
     }
 
     //Fetch Course info when CourseDetail Component mounts
@@ -41,7 +42,10 @@ class CourseDetail extends Component {
                     courseId: course.id,
                     createdBy: course.User.id,
                     publishedBy: course.User.firstName + " " + course.User.lastName
-                })
+                });
+
+                
+
             })
             .catch( err => {
               console.log(err);
@@ -60,33 +64,40 @@ class CourseDetail extends Component {
           auth:{
             username: emailAddress,
             password: password
+          },
+          data:{
+            id: this.state.courseId
           }
         }
+        
       )
       .then( res => {
-        console.log(res);
+
+        //Redirect user upon deletion
+        this.props.history.push("/courses");
+        console.log("Course successfully deleted");
       })
       .catch(err => {
         
         const error = err.response.data.message;
         console.log(error);
+
+        this.setState({
+          validationErrors: error
+        });
       })
     };
 
-    //Handle Update button
-    handleToUpdateCourse = e => {
+    handleCancel = e => {
       e.preventDefault();
-      this.props.history.push(this.props.match.url + "/update");
+      this.props.history.push("/courses");
     };
-
-
-
 
     render() {
 
       //Destructure
-      const { title, description, estimatedTime, materialsNeeded } = this.state.course;
-      const { publishedBy, createdBy } = this.state;
+      const { id, title, description, estimatedTime, materialsNeeded } = this.state.course;
+      const { publishedBy, createdBy, validationErrors } = this.state;
 
 
         return(
@@ -104,8 +115,7 @@ class CourseDetail extends Component {
                         {/*This component also renders an "Update Course" button for navigating to the "Update Course" screen.*/}
                         <Link 
                           className="button"
-                          to="#" 
-                          onClick={ e => this.handleToUpdateCourse(e)}>
+                          to={"/courses/" + id + "/update"}>
                           Update Course
                         </Link>
                       
@@ -113,7 +123,8 @@ class CourseDetail extends Component {
                         <Link
                           className="button"
                           to='#'
-                          onClick={e => this.handleDeleteCourse(e, user.emailAddress, password)}>
+                          onClick={e => this.handleDeleteCourse(e, user.emailAddress, password )}
+                          >
                           Delete Course
                         </Link> 
                       </span>
@@ -130,6 +141,18 @@ class CourseDetail extends Component {
                 <div className="grid-66">
                   <div className="course--header">
                     <h4 className="course--label">Course</h4>
+                    
+                    {/* Conditionally render validation errors */}
+                    {validationErrors?(
+                                <div>
+                                    <h2 className="validation--errors--label">Validation errors</h2>
+                                    <div className="validation-errors">
+                                        <ul>
+                                            <li>{validationErrors}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            ):""}
                     <h3 className="course--title">{title}</h3>
                     <p>By {publishedBy}</p>
                   </div>
@@ -166,4 +189,4 @@ class CourseDetail extends Component {
     )};
 }
 
-export default CourseDetail;
+export default withRouter(CourseDetail);

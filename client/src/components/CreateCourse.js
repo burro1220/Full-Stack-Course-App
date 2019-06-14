@@ -43,13 +43,13 @@ class CreateCourse extends Component {
                 validationErrors: "A description must be entered"
             })
         } 
-        if(title === ''){
+        else if(title === ''){
             this.setState({
                 validationErrors: "A title must be entered"
             })
         }
         else{
-            //Make request
+            //Send Data
             axios({
                 method: 'post',
                 url: 'http://localhost:5000/api/courses',
@@ -77,7 +77,7 @@ class CreateCourse extends Component {
                         validationErrors: ''
                     });
                     
-                    //Redirect user upon login
+                    //Redirect user upon Course Creation
                     this.props.history.push("/courses");
                 })
                 .catch( err => {
