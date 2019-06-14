@@ -38,14 +38,14 @@ class CreateCourse extends Component {
         //Destructure
         const { title, description, estimatedTime, materialsNeeded } = this.state;
         
-        if(description === ''){
-            this.setState({
-                validationErrors: "A description must be entered"
-            })
-        } 
-        else if(title === ''){
+        if(title === ''){
             this.setState({
                 validationErrors: "A title must be entered"
+            })
+        } 
+        else if(description === ''){
+            this.setState({
+                validationErrors: "A description must be entered"
             })
         }
         else{

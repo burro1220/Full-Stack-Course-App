@@ -47,11 +47,20 @@ class UserSignUp extends Component {
         //Prevent default submission
         e.preventDefault();
 
+        
+
         //Destructure
         const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
 
+        //Check for empty password
+        if (password === "") {
+            this.setState({
+                validationErrors:"You must enter a password."
+            })
+        }
+
         //Check if passwords match
-        if( password !== confirmPassword ) {
+        else if( password !== confirmPassword ) {
 
             this.setState({
                 validationErrors: "Passwords do not match."

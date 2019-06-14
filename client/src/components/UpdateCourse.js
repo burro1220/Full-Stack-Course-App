@@ -179,7 +179,7 @@ class UpdateCourse extends Component {
                                                     name="description" 
                                                     className="" 
                                                     placeholder="Course description"
-                                                    defaultValue={description}
+                                                    value={description}
                                                     onChange={this.handleInputChange} >
                                                 </textarea>
                                             </div>
@@ -210,7 +210,7 @@ class UpdateCourse extends Component {
                                                             name="materialsNeeded" 
                                                             className="" 
                                                             placeholder="Materials needed"
-                                                            defaultValue={materialsNeeded}
+                                                            value={materialsNeeded}
                                                             onChange={this.handleInputChange} >
                                                         </textarea>
                                                     </div>
