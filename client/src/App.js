@@ -13,6 +13,10 @@ import UpdateCourse from './components/UpdateCourse';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import PrivateRoute from './components/PrivateRoute';
+import Forbidden from './components/Forbidden';
+import UnhandledError from './components/UnhandledError';
+import NotFound from './components/NotFound';
+
 
 
 //Top-Level Component managing user log-in state
@@ -23,10 +27,6 @@ class App extends Component {
 
     //Authenticated user data
     authUserData: {},
-    //Authentication state
-    loggedIn: false,
-    //User Password
-    password: '',
     //Validation errors
     validationErrors: ''
 
@@ -62,11 +62,16 @@ handleSignIn(e, email, password){
         //Grab reference to User Data
         const user = res.data;
 
-        //Set User data and loggedIn status
+        const name = user.firstName + ' ' + user.lastName;
+        
+        //Persist User Data in Local Storage
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("username", email);
+        localStorage.setItem("password", password);
+        localStorage.setItem("name", name);
+
+        //Clear validation errors
         this.setState({
-          authUserData: user,
-          loggedIn: true,
-          password: password,
           validationErrors: ''
         });
 
@@ -92,11 +97,19 @@ handleSignIn(e, email, password){
 
 //Handle Signing Out by setting authUserData back to empty object
 handleSignOut(){
+
+    //Clear local storage
+    localStorage.clear();
+
+    //Reset validation errprs
     this.setState({
-      authUserData: {},
-      loggedIn: false,
-      password: ''
+     validationErrors: ""
     });
+
+    //Redirect to /courses
+    this.props.history.push("/courses");
+
+
 
 }
 
@@ -106,13 +119,9 @@ return (
     //Provide Context
     <UserContext.Provider 
       value={{
-        user: this.state.authUserData,
-        password: this.state.password,
         signIn: this.handleSignIn.bind(this),
         signOut: this.handleSignOut.bind(this),
-        loggedIn: this.state.loggedIn,
         validationErrors: this.state.validationErrors
-
         }}>
       <div className="App">
         <Header />
@@ -132,8 +141,11 @@ return (
             {/* courses routes */} 
             <Route exact path="/courses" render={ () => <Courses /> } />
             <PrivateRoute exact path="/courses/create" component= {CreateCourse}   />
-            <Route exact path="/courses/:id" render={ props => <CourseDetail {...props} /> } />
-            <PrivateRoute exact path="/courses/:id/update" component= {UpdateCourse} />       
+            <Route exact path="/courses/:id" render={ () => <CourseDetail /> } />
+            <PrivateRoute exact path="/courses/:id/update" component= {UpdateCourse} /> 
+            <Route path="/forbidden" component= {Forbidden} /> 
+            <Route path="/error" component = {UnhandledError} />
+            <Route path ="/notfound" component = {NotFound} />
           </Switch>  
       </div>
     </UserContext.Provider>

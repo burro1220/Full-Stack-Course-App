@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import UserContext from './UserContext';
+
 
 //This component provides the "Create Course" screen by rendering a form that allows a user to create a new course.
 class CreateCourse extends Component {
@@ -30,7 +30,7 @@ class CreateCourse extends Component {
     };
 
     //Handle Creating Course
-    handleCreateCourse(e, user, password){
+    handleCreateCourse(e){
 
         //Prevent default submission
         e.preventDefault();
@@ -54,11 +54,11 @@ class CreateCourse extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/api/courses',
                 auth: {
-                    username: user.emailAddress,
-                    password: password
+                    username: localStorage.getItem("username"),
+                    password: localStorage.getItem("password")
                 },
                 data: {
-                    user: user.id,
+                    user: localStorage.getItem("id"),
                     title,
                     description,
                     estimatedTime,
@@ -66,7 +66,7 @@ class CreateCourse extends Component {
                 }
             })
             //Upon Response
-            .then( res => {
+            .then( () => {
 
                     this.setState({
                         id: '',
@@ -82,11 +82,21 @@ class CreateCourse extends Component {
                 })
                 .catch( err => {
 
-                    const error = err.response.data.message;
-                    
-                    this.setState({
-                        validationErrors: error
-                    })
+                    //Bad request errors
+                    if(err.response.status === 400){
+
+                        const error = err.response.data.message;
+                        
+                        //Store validation error in state for display
+                        this.setState({
+                            validationErrors: error
+                        })
+
+                    } else if(err.response.status === 500){
+
+                        //Send unhandled server to /error
+                        this.props.history.push("/error");
+                    }
                 })
             }
             
@@ -106,8 +116,6 @@ class CreateCourse extends Component {
         const { title, description, estimatedTime, materialsNeeded, validationErrors } = this.state;
 
         return (
-            <UserContext.Consumer>
-                {( {user, password } ) => (
                     <div className="bounds course--detail">
                         <h1>Create Course</h1>
                             <div>
@@ -121,7 +129,7 @@ class CreateCourse extends Component {
                                     </div>
                                 </div>
                             ):""}
-                                <form onSubmit={e => this.handleCreateCourse(e, user, password, title, description, estimatedTime, materialsNeeded)}>
+                                <form onSubmit={e => this.handleCreateCourse(e, localStorage.getItem("username"), localStorage.getItem("password"), title, description, estimatedTime, materialsNeeded)}>
                                     <div className="grid-66">
                                         <div className="course--header">
                                             <h4 className="course--label">Course</h4>
@@ -135,7 +143,7 @@ class CreateCourse extends Component {
                                                     onChange={this.handleInputChange}
                                                 />
                                             </div>
-                                            <p>By {user.firstName} {user.lastName}</p>
+                                            <p>By {localStorage.getItem("name")}</p>
                                         </div>
                                             <div className="course--description">
                                                 <div>
@@ -198,8 +206,6 @@ class CreateCourse extends Component {
                                 </form>
                             </div>
                     </div>
-                )}
-            </UserContext.Consumer>
            
         );
     }

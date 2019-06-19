@@ -1,17 +1,15 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import UserContext from './UserContext';
+
 
 function PrivateRoute({ component: Component, ...rest }) {
     
-    //Use Context to check state of loggedIn to only direct user to route if loggedIn, otherwise redirect to /signin
+    //Use local storage to check if username and only direct user to route if logged in, otherwise redirect to /signin
     return (
-        <UserContext.Consumer>
-            {({ loggedIn }) => (
-                <Route
+            <Route
                 {...rest}
                 render={props =>
-                    loggedIn ? (
+                    (localStorage.getItem("username") !== "") ? (
                         <Component {...props} />
                     ) : (
                         <Redirect
@@ -23,8 +21,6 @@ function PrivateRoute({ component: Component, ...rest }) {
           )
         }
       />
-            )}
-        </UserContext.Consumer>
       
     );
   }

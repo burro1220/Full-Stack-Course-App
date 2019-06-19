@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import UserContext from './UserContext';
 
 
 //This component provides the "Update Course" screen by rendering a form that allows a user to update one of their existing courses. 
@@ -50,18 +49,42 @@ class UpdateCourse extends Component {
                 //Grab desired data reference
                 const course = res.data;
 
-                //Set state to current course
-                this.setState({
-                    id: course.id,
-                    title: course.title,
-                    description: course.description,
-                    estimatedTime: course.estimatedTime,
-                    materialsNeeded: course.materialsNeeded,
-                    userId: course.userId,
-                    createdBy: course.User.firstName + ' ' + course.User.lastName,
-                    validationErrors:''
-                })
+                //If User doesn't own course send to /forbidden
+                if(course.userId !== parseInt(localStorage.getItem("id"))){
+
+                    this.props.history.push("/forbidden");
+
+                } else {
+                    
+                    //Set state to current course
+                    this.setState({
+                        id: course.id,
+                        title: course.title,
+                        description: course.description,
+                        estimatedTime: course.estimatedTime,
+                        materialsNeeded: course.materialsNeeded,
+                        userId: course.userId,
+                        validationErrors:''
+                    })
+                }
+                
             })
+            //Handle Error
+            .catch( err => {
+              
+                //If Course isn't found redirect to /notfound
+                if(err.response.status === 404) {
+                  this.props.history.push("/notfound");
+                
+                } else {
+  
+                  //Unhandled Error
+                  console.log(err);
+                  this.props.history.push("/error");
+                  
+                }
+                
+              })
     };
 
     //Handle form submission to update course
@@ -73,14 +96,19 @@ class UpdateCourse extends Component {
         //Destructure
         const { id, title, description, estimatedTime, materialsNeeded, userId } = this.state;
         
-        if(description === ''){
+        if(title === ''){
+            this.setState({
+                validationErrors: "A title must be entered"
+            })
+        } 
+        else if(description === ''){
             this.setState({
                 validationErrors: "A description must be entered"
             })
-        } 
-        else if(title === ''){
+        }
+        else if(title === '' && description === ''){
             this.setState({
-                validationErrors: "A title must be entered"
+                validationErrors: "A title and description must be entered"
             })
         }
         else{
@@ -89,8 +117,8 @@ class UpdateCourse extends Component {
                 method: 'put',
                 url: 'http://localhost:5000/api/courses/' + this.props.match.params.id,
                 auth: {
-                    username: user.emailAddress,
-                    password: password
+                    username: localStorage.getItem("username"),
+                    password: localStorage.getItem("password")
                 },
                 data: {
                     id,
@@ -102,8 +130,9 @@ class UpdateCourse extends Component {
                 }
             })
             //Upon Response
-            .then( res => {
+            .then( () => {
 
+                    //Reset local state
                     this.setState({
                         id: "",
                         title:"",
@@ -111,20 +140,34 @@ class UpdateCourse extends Component {
                         estimatedTime:"",
                         materialsNeeded:"",
                         userId: "",
-                        createdBy:"",
                         validationErrors:""
                     });
                     
-                    //Redirect user upon Course Edit
+                    //Log success & redirect user upon Course Edit
+                    console.log(`${this.state.title} has been updated.`)
                     this.props.history.push("/courses");
                 })
+
+                //Handle errors
                 .catch( err => {
 
-                    const error = err.response.data.message;
+                    //Bad request errors
+                    if(err.response.status === 400){
+
+                        const error = err.response.data.message;
+                        
+                        //Store validation error in state for display
+                        this.setState({
+                            validationErrors: error
+                        })
+
+                    } else if(err.response.status === 500){
+
+                        //Send unhandled server to /error
+                        this.props.history.push("/error");
+                    }
+
                     
-                    this.setState({
-                        validationErrors: error
-                    })
                 })
             }
             
@@ -137,111 +180,106 @@ class UpdateCourse extends Component {
 
     render(){
 
-        const { title, description, estimatedTime, materialsNeeded, createdBy } = this.state;
+        const { title, description, estimatedTime, materialsNeeded, validationErrors } = this.state;
 
         return(
-            <UserContext.Consumer>
-                { ({ user, password, validationErrors }) => (
-                    <div className="bounds course--detail">
-                        <h1>Update Course</h1>
+                <div className="bounds course--detail">
+                    <h1>Update Course</h1>
+                        <div>
+                        {validationErrors?(
                             <div>
-                            {validationErrors?(
-                                <div>
-                                    <h2 className="validation--errors--label">Validation errors</h2>
-                                    <div className="validation-errors">
-                                        <ul>
-                                            <li>{validationErrors}</li>
+                                <h2 className="validation--errors--label">Validation errors</h2>
+                                <div className="validation-errors">
+                                    <ul>
+                                        <li>{validationErrors}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        ):""}
+                            <form onSubmit={e => this.handleUpdateCourse(e, localStorage.getItem("username"), localStorage.getItem("password"), title, description, materialsNeeded, estimatedTime)}>
+                                <div className="grid-66">
+                                    <div className="course--header">
+                                        <h4 className="course--label">Course</h4>
+                                        <div>
+                                            <input 
+                                                id="title" 
+                                                name="title" 
+                                                type="text" 
+                                                className="input-title course--title--input" 
+                                                placeholder="Course title"
+                                                defaultValue={title}
+                                                onChange={this.handleInputChange} 
+                                            />
+                                        </div>
+                                        <p>By {localStorage.getItem("name")}</p>
+                                    </div>
+                                    <div className="course--description">
+                                        <div>
+                                            <textarea 
+                                                id="description" 
+                                                name="description" 
+                                                className="" 
+                                                placeholder="Course description"
+                                                value={description}
+                                                onChange={this.handleInputChange} >
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid-25 grid-right">
+                                    <div className="course--stats">
+                                        <ul className="course--stats--list">
+                                            <li className="course--stats--list--item">
+                                                <h4>Estimated Time</h4>
+                                                <div>
+                                                    <input 
+                                                        id="estimatedTime" 
+                                                        name="estimatedTime" 
+                                                        type="text" 
+                                                        className="course--time--input"
+                                                        placeholder="Hours"
+                                                        defaultValue={estimatedTime} 
+                                                        onChange={this.handleInputChange} 
+                                                    />
+                                                </div>
+                                            </li>
+                                            <li className="course--stats--list--item">
+                                                <h4>Materials Needed</h4>
+                                                <div>
+                                                    <textarea 
+                                                        id="materialsNeeded" 
+                                                        name="materialsNeeded" 
+                                                        className="" 
+                                                        placeholder="Materials needed"
+                                                        value={materialsNeeded}
+                                                        onChange={this.handleInputChange} >
+                                                    </textarea>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
-                            ):""}
-                                <form onSubmit={e => this.handleUpdateCourse(e, user, password, title, description, materialsNeeded, estimatedTime)}>
-                                    <div className="grid-66">
-                                        <div className="course--header">
-                                            <h4 className="course--label">Course</h4>
-                                            <div>
-                                                <input 
-                                                    id="title" 
-                                                    name="title" 
-                                                    type="text" 
-                                                    className="input-title course--title--input" 
-                                                    placeholder="Course title"
-                                                    defaultValue={title}
-                                                    onChange={this.handleInputChange} 
-                                                />
-                                            </div>
-                                            <p>By {createdBy}</p>
-                                        </div>
-                                        <div className="course--description">
-                                            <div>
-                                                <textarea 
-                                                    id="description" 
-                                                    name="description" 
-                                                    className="" 
-                                                    placeholder="Course description"
-                                                    value={description}
-                                                    onChange={this.handleInputChange} >
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="grid-25 grid-right">
-                                        <div className="course--stats">
-                                            <ul className="course--stats--list">
-                                                <li className="course--stats--list--item">
-                                                    <h4>Estimated Time</h4>
-                                                    <div>
-                                                        <input 
-                                                            id="estimatedTime" 
-                                                            name="estimatedTime" 
-                                                            type="text" 
-                                                            className="course--time--input"
-                                                            placeholder="Hours"
-                                                            defaultValue={estimatedTime} 
-                                                            onChange={this.handleInputChange} 
-                                                        />
-                                                    </div>
-                                                </li>
-                                                <li className="course--stats--list--item">
-                                                    <h4>Materials Needed</h4>
-                                                    <div>
-                                                        <textarea 
-                                                            id="materialsNeeded" 
-                                                            name="materialsNeeded" 
-                                                            className="" 
-                                                            placeholder="Materials needed"
-                                                            value={materialsNeeded}
-                                                            onChange={this.handleInputChange} >
-                                                        </textarea>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div className="grid-100 pad-bottom">
+                                <div className="grid-100 pad-bottom">
 
-                                        {/* The component also renders an "Update Course" button that when clicked sends a PUT request to the REST API's /api/courses/:id route.  */}
-                                        <button 
-                                            className="button" 
-                                            type="submit">
-                                            Update Course
-                                        </button>
+                                    {/* The component also renders an "Update Course" button that when clicked sends a PUT request to the REST API's /api/courses/:id route.  */}
+                                    <button 
+                                        className="button" 
+                                        type="submit">
+                                        Update Course
+                                    </button>
 
-                                        {/* This component also renders a "Cancel" button that returns the user to the "Course Detail" screen. */}
-                                        <button 
-                                            className="button button-secondary"
-                                            to='#' 
-                                            onClick={this.handleCancel.bind(this)}>
-                                            Cancel
-                                        </button>
-                                    </div>
-                                    
-                                </form>
-                            </div>
-                    </div>
-                )}
-            </UserContext.Consumer>
-            
+                                    {/* This component also renders a "Cancel" button that returns the user to the "Course Detail" screen. */}
+                                    <button 
+                                        className="button button-secondary"
+                                        to='#' 
+                                        onClick={this.handleCancel.bind(this)}>
+                                        Cancel
+                                    </button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                </div>            
         );
     }
 }

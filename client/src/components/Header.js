@@ -6,20 +6,20 @@ const Header = () => {
    
     return  (
 
-        //Utilize Context API to pass User Data
+        //Utilize Context API to pass signOut function
         <UserContext.Consumer>
 
             {/* Context must return a function */}
-            { ({ user, signOut, loggedIn }) => (
+            { ({ signOut }) => (
 
-                /* Conditionally render header depending on loggedIn state */
-                loggedIn ?(
+                /* Conditionally render header depending on if username found */
+                localStorage.getItem("username") ?(
                 <div>
                     <div className="header">
                         <div className= "bounds">
                         <h1 className="header--logo">Courses</h1>
                         <nav>
-                            <span>Welcome {user.firstName} {user.lastName}!</span>
+                            <span>Welcome {localStorage.getItem("name")}!</span>
                             <Link 
                                 className="signout" 
                                 to="/signout"
