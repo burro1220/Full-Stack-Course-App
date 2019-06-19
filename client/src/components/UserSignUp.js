@@ -94,12 +94,21 @@ class UserSignUp extends Component {
             })
             //Catch error
             .catch(err => {
+
+                //Handle request errors
+                if(err.response.status === 400){
                
-                const error = err.response.data.message;
+                    const error = err.response.data.message;
                     
                     this.setState({
                         validationErrors: error
-                    })
+                    });
+                
+                } else if(err.response.status === 500){
+
+                    //Send unhandled server to /error
+                    this.props.history.push("/error");
+                }
             });
             
         } 

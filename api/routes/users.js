@@ -53,6 +53,7 @@ router.post("/", (req, res, next) => {
                     })
                     //Catch error and check if Sequelize validation  error (not using) and pass error to next middleware
                     .catch (err => {
+                        console.log(err.name);
                         if (err.name === "SequelizeValidationError") {
                             err.message = "All data must be entered";
                             err.status = 400;
