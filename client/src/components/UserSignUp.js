@@ -12,7 +12,7 @@ class UserSignUp extends Component {
     //Component State manages form changes
     state = {
 
-        //initialize state to empty string
+        //initialize lo0cal state to empty string
         firstName: '',
         lastName: '',
         emailAddress: '',

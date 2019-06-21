@@ -19,7 +19,7 @@ import NotFound from './components/NotFound';
 
 
 
-//Top-Level Component managing user log-in state
+//Top-Level Component managing user log-in global state
 class App extends Component {
 
   //Initialize state  
@@ -33,7 +33,7 @@ class App extends Component {
   }
 
 //Handle Signing in
-handleSignIn(e, email, password){
+handleSignIn(e, email, password, props){
 
     //Prevent default submission
     if(e){
@@ -75,19 +75,30 @@ handleSignIn(e, email, password){
           validationErrors: ''
         });
 
-        //Redirect user upon login
-        this.props.history.push("/courses");
+        //Redirect user to previous page upon login
+        const { history, location } = props;
+        const path = location.state ? location.state.prevLocation : '/courses';
+        history.push(path);
 
       }
     })
     //Catch error
     .catch(err => {
       
-      const error = err.response.data.message;
+      //Handle request errors
+      if(err.response.status === 400){
+               
+        const error = err.response.data.message;
+        
+        this.setState({
+            validationErrors: error
+        });
+    
+      } else if(err.response.status === 500){
 
-      this.setState({
-        validationErrors: error
-      })
+        //Send unhandled server to /error
+        this.props.history.push("/error");
+    }
       
     });
     
@@ -146,6 +157,7 @@ return (
             <Route path="/forbidden" component= {Forbidden} /> 
             <Route path="/error" component = {UnhandledError} />
             <Route path ="/notfound" component = {NotFound} />
+            <Redirect to ="/notfound" />
           </Switch>  
       </div>
     </UserContext.Provider>

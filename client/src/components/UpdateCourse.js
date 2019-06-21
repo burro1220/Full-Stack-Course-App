@@ -84,7 +84,7 @@ class UpdateCourse extends Component {
                   
                 }
                 
-              })
+              });
     };
 
     //Handle form submission to update course

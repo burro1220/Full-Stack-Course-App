@@ -8,7 +8,7 @@ class CreateCourse extends Component {
 
     state = {
 
-        //Initalize empty state
+        //Initalize empty local state
         id: '',
         title: '',
         description: '',
@@ -65,7 +65,7 @@ class CreateCourse extends Component {
                     materialsNeeded
                 }
             })
-            //Upon Response
+            //Upon Response clear local state
             .then( () => {
 
                     this.setState({
