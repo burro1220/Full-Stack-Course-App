@@ -28,9 +28,16 @@ class App extends Component {
     //Authenticated user data
     authUserData: {},
     //Validation errors
-    validationErrors: ''
+    validationErrors: '',
+    //previous path
+    prevPath: ''
 
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location !== this.props.location) {
+      this.setState({ prevPath: this.props.location })
+    }}
 
 //Handle Signing in
 handleSignIn(e, email, password, props){
@@ -76,8 +83,8 @@ handleSignIn(e, email, password, props){
         });
 
         //Redirect user to previous page upon login
-        const { history, location } = props;
-        const path = location.state ? location.state.prevLocation : '/courses';
+        const {history} = this.props;
+        const path = this.State.prevPath ? this.State.prevPath.pathname : '/courses';
         history.push(path);
 
       }
