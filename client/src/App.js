@@ -84,7 +84,7 @@ handleSignIn(e, email, password, props){
 
         //Redirect user to previous page upon login
         const {history} = this.props;
-        const path = this.State.prevPath ? this.State.prevPath.pathname : '/courses';
+        const path = this.state.prevPath !== '/signin' ? this.state.prevPath.pathname : '/courses';
         history.push(path);
 
       }

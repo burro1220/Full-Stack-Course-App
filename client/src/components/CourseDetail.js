@@ -39,6 +39,7 @@ class CourseDetail extends Component {
                 this.setState({
                     course,
                     courseId: course.id,
+                    publishedBy: course.User.firstName + ' ' + course.User.lastName,
                     createdBy: course.User.id
                 });                
 
@@ -120,7 +121,7 @@ class CourseDetail extends Component {
 
       //Destructure
       const { id, title, description, estimatedTime, materialsNeeded } = this.state.course;
-      const { createdBy, validationErrors } = this.state;
+      const { createdBy, publishedBy, validationErrors } = this.state;
 
 
         return(
@@ -177,7 +178,7 @@ class CourseDetail extends Component {
                         ):""}
                         
                         <h3 className="course--title">{title}</h3>
-                        <p>By {localStorage.getItem("name")}</p>
+                        <p>By {publishedBy}</p>
                       </div>
                       <div className="course--description">
                         
