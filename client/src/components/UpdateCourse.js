@@ -96,22 +96,7 @@ class UpdateCourse extends Component {
         //Destructure
         const { id, title, description, estimatedTime, materialsNeeded, userId } = this.state;
         
-        if(title === ''){
-            this.setState({
-                validationErrors: "A title must be entered"
-            })
-        } 
-        else if(description === ''){
-            this.setState({
-                validationErrors: "A description must be entered"
-            })
-        }
-        else if(title === '' && description === ''){
-            this.setState({
-                validationErrors: "A title and description must be entered"
-            })
-        }
-        else{
+     
             //Send Data
             axios({
                 method: 'put',
@@ -130,22 +115,27 @@ class UpdateCourse extends Component {
                 }
             })
             //Upon Response
-            .then( () => {
+            .then( (response) => {
 
-                    //Reset local state
-                    this.setState({
-                        id: "",
-                        title:"",
-                        description:"",
-                        estimatedTime:"",
-                        materialsNeeded:"",
-                        userId: "",
-                        validationErrors:""
-                    });
-                    
+                
+                    console.log(response.status);
+
                     //Log success & redirect user upon Course Edit
-                    console.log(`${this.state.title} has been updated.`)
-                    this.props.history.push("/courses");
+                    // console.log(`${this.state.title} has been updated.`);
+
+                    // //Reset local state
+                    // this.setState({
+                    //     id: "",
+                    //     title:"",
+                    //     description:"",
+                    //     estimatedTime:"",
+                    //     materialsNeeded:"",
+                    //     userId: "",
+                    //     validationErrors:""
+                    // });
+                    
+                    
+                    // this.props.history.push("/courses");
                 })
 
                 //Handle errors
@@ -169,13 +159,13 @@ class UpdateCourse extends Component {
 
                     
                 })
-            }
+            
             
     };
 
     handleCancel = e => {
         e.preventDefault();
-        this.props.history.push("/courses");
+        this.props.history.push("/courses/"  + this.props.match.params.id);
       };
 
     render(){

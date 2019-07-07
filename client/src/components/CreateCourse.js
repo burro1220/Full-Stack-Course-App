@@ -38,17 +38,7 @@ class CreateCourse extends Component {
         //Destructure
         const { title, description, estimatedTime, materialsNeeded } = this.state;
         
-        if(title === ''){
-            this.setState({
-                validationErrors: "A title must be entered"
-            })
-        } 
-        else if(description === ''){
-            this.setState({
-                validationErrors: "A description must be entered"
-            })
-        }
-        else{
+        
             //Send Data
             axios({
                 method: 'post',
@@ -98,7 +88,7 @@ class CreateCourse extends Component {
                         this.props.history.push("/error");
                     }
                 })
-            }
+            
             
             
         

@@ -40,7 +40,7 @@ class App extends Component {
     }}
 
 //Handle Signing in
-handleSignIn(e, email, password, props){
+handleSignIn(e, email, password){
 
     //Prevent default submission
     if(e){
@@ -84,7 +84,7 @@ handleSignIn(e, email, password, props){
 
         //Redirect user to previous page upon login
         const {history} = this.props;
-        const path = this.state.prevPath !== '/signin' ? this.state.prevPath.pathname : '/courses';
+        const path = this.state.prevPath ? this.state.prevPath : '/courses';
         history.push(path);
 
       }
@@ -124,8 +124,7 @@ handleSignOut(){
      validationErrors: ""
     });
 
-    //Redirect to /courses
-    this.props.history.push("/courses");
+    
 
 
 
@@ -151,7 +150,7 @@ return (
             {/* signing routes */}
             <Route path="/signin" render={ () => <UserSignIn/> }  />
             <Route path="/signout" render={ () => 
-              <Redirect to="/signin"
+              <Redirect to="/courses"
               /> } 
             />
             <Route path="/signup" render={ () => <UserSignUp signIn={this.handleSignIn.bind(this)} /> } />
