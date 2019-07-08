@@ -88,7 +88,7 @@ class UpdateCourse extends Component {
     };
 
     //Handle form submission to update course
-    handleUpdateCourse = (e, user, password) => {
+    handleUpdateCourse = (e) => {
 
         //Prevent default
         e.preventDefault();
@@ -117,45 +117,58 @@ class UpdateCourse extends Component {
             //Upon Response
             .then( (response) => {
 
-                
-                    console.log(response.status);
+                //IF Successful
+                if (response.status === 204) {
 
                     //Log success & redirect user upon Course Edit
-                    // console.log(`${this.state.title} has been updated.`);
+                    console.log(`${this.state.title} has been updated.`);
 
-                    // //Reset local state
-                    // this.setState({
-                    //     id: "",
-                    //     title:"",
-                    //     description:"",
-                    //     estimatedTime:"",
-                    //     materialsNeeded:"",
-                    //     userId: "",
-                    //     validationErrors:""
-                    // });
+                    //Reset local state
+                    this.setState({
+                        id: "",
+                        title:"",
+                        description:"",
+                        estimatedTime:"",
+                        materialsNeeded:"",
+                        userId: ""
+                    });
                     
                     
-                    // this.props.history.push("/courses");
-                })
+                    this.props.history.push("/courses");
+                }
+                    
+               })
 
                 //Handle errors
                 .catch( err => {
 
-                    //Bad request errors
-                    if(err.response.status === 400){
+                    //Check for response
+                    if(err.response){
 
-                        const error = err.response.data.message;
-                        
-                        //Store validation error in state for display
-                        this.setState({
-                            validationErrors: error
-                        })
+                        //Handle validation errors from API
+                        if(err.response.status === 400) {
+                            
+                            const errors = err.response.data.message;
 
-                    } else if(err.response.status === 500){
+                            this.setState({
+                                validationErrors: errors
+                            })
+                        } else if(err.response.status === 401){
 
-                        //Send unhandled server to /error
+                            //Handle Unauthorized
+                            this.props.history.push("/signin")
+                        } else {
+
+                            //Redirect to error page
+                            this.props.history.push("/error");
+                        }
+
+                    } else {
+
+                        //Unhandled Server Error
+                        console.log(err);
                         this.props.history.push("/error");
-                    }
+                    }                 
 
                     
                 })
