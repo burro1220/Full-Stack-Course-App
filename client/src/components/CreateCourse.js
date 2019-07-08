@@ -14,7 +14,7 @@ class CreateCourse extends Component {
         description: '',
         estimatedTime: '',
         materialsNeeded: '',
-        validationErrors: ''
+        validationErrors: []
     }
 
     //Handle changes to user input
@@ -72,21 +72,32 @@ class CreateCourse extends Component {
                 })
                 .catch( err => {
 
-                    //Bad request errors
-                    if(err.response.status === 400){
+                   //Check for response
+                   if(err.response){
 
-                        const error = err.response.data.message;
+                    //Handle validation errors from API
+                    if(err.response.status === 400) {
                         
-                        //Store validation error in state for display
+                        const errors = err.response.data.message;
+                        
+
                         this.setState({
-                            validationErrors: error
+                            validationErrors: errors
                         })
+                    } else if(err.response.status === 401){
 
-                    } else if(err.response.status === 500){
+                        //Handle Unauthorized
+                        this.props.history.push("/signin")
+                    } else {
 
-                        //Send unhandled server to /error
+                        //Redirect to error page
                         this.props.history.push("/error");
                     }
+
+                }              
+
+
+                    
                 })
             
             
@@ -103,18 +114,22 @@ class CreateCourse extends Component {
     render(){
         
         //Destructure
-        const { title, description, estimatedTime, materialsNeeded, validationErrors } = this.state;
+        const { title, description, estimatedTime, materialsNeeded, validationErrors} = this.state;
+        const errors = this.state.validationErrors;
+        
+        //Found this here: https://reactjs.org/docs/lists-and-keys.html
+        const validationErrorList = errors.map( error => <li key={error.toString()}>{error}</li>)
 
         return (
                     <div className="bounds course--detail">
                         <h1>Create Course</h1>
                             <div>
-                            {validationErrors?(
+                            {(validationErrorList.length > 0)?(
                                 <div>
                                     <h2 className="validation--errors--label">Validation errors</h2>
                                     <div className="validation-errors">
                                         <ul>
-                                            <li>{validationErrors}</li>
+                                            {validationErrorList}
                                         </ul>
                                     </div>
                                 </div>

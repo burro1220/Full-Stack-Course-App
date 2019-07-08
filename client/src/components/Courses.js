@@ -34,17 +34,31 @@ class Courses extends Component {
         //Handle Error
         .catch( err => {
               
-            //If Course isn't found redirect to /notfound
-            if(err.response.status === 404) {
-              this.props.history.push("/notfound");
-            
-            } else {
+            //Check for response
+            if(err.response){
 
-              //Unhandled Error
-              console.log(err);
-              this.props.history.push("/error");
-              
+                //Check Status
+                if(err.response.status === 400){
+
+                    const error = err.response.data.message;
+                    
+                    //Store error in state
+                    this.setState({
+                        validationErrors: error
+                    })
+
+                }  else if(err.status === 404) {
+                  this.props.history.push("/notfound");
+                
+                } else {
+    
+                  //Unhandled Error
+                  console.log(err);
+                  this.props.history.push("/error");
+                  
+                }
             }
+           
             
           });
     };

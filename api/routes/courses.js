@@ -96,13 +96,7 @@ router.post("/", authenticate, (req, res, next) => {
     //Grab info from request
     const info = req.body;
     
-    //If title is undefined 
-    if (!info.title) {
-        const err = new Error('You have not entered a title for your course');
-        err.status = 400;
-        next(err);
-       
-    } else {
+    
         //Look for prexisting Course
         Course.findOne({ where: { 
                 title: info.title 
@@ -129,10 +123,12 @@ router.post("/", authenticate, (req, res, next) => {
                     res.location('/api/courses/' + course.id);
                     res.status(201).end();
                 })
-                //Catch error and check if Sequelize validation  error (not using) and pass error to next middleware
+                //Catch error and check if Sequelize validation  error and pass error to next middleware
                 .catch (err => {
                     if (err.name === "SequelizeValidationError") {
-                        err.message = "All data must be entered";
+                        const errorArray = err.errors;
+                        const errorMessages = errorArray.map( error => error.message);
+                        err.message = errorMessages;
                         err.status = 400;
                         next(err);
                     } else {
@@ -144,63 +140,53 @@ router.post("/", authenticate, (req, res, next) => {
             }
         })
 
-    }
 
 });
 
 //PUT an update to a Course
 router.put('/:id', authenticate, (req, res, next) => {
 
-    //Grab info from request
-    const info = req.body; 
-
-        //Filter for Course by ID
-        Course.findOne({ where: {
-            id: info.id
-        }})
-        .then ( course => {
-            
-            //console.log(`userId= ${course.userId} id = ${req.currentUser.id}`);
-            //If user doesn't own course
-            if (course.userId !== req.currentUser.id) {
-
-                //Send error
-                const err = new Error('You can only edit your own course');
-                err.status = 403;
-                next(err);
-                
-            } else if (course) {
-                
-                //Update Course
-                course.update(info);
-
-            } else {
-                
-                //Send error
-                const err = new Error('We can not find a Course by that ID');
-                err.status = 400;
-                next(err);
-            }
-        })
-        .then( () => {
-            
-            //On Success
-            console.log("Your course has been edited");
-            res.status(204).end();
-        })
-        .catch(err => {
-            if (err.name === "SequelizeValidationError") {
-                err.message = "All data must be entered";
-                err.status = 400;
-                next(err);
-            } else {
-                err.status = 400;
-                next(err);
-            } 
-        })
-
     
+    //Grab info from request
+    const info = req.body;
+    
+    //If title is undefined 
+    if (!info.title) {
+        const err = new Error('You have not entered a title for your course');
+        err.status = 400;
+        next(err);
+       
+        //Check for description
+    }  else if (!info.description){
 
+        const err = new Error('You have not entered a description for your course');
+        err.status = 400;
+        next(err);
+
+    } else {
+            
+            //Filter for Course by ID
+            Course.findOne({ where: {
+            id: info.id
+            }})
+            .then ( course => {
+                                
+                    //Update Course
+                    course.update(info);
+                    console.log("Your course has been edited");
+                    res.status(204).end();
+
+                })
+                .catch(err => {
+
+                    //Send error
+                    err.message = 'We can not find a Course by that ID';
+                    err.status = 400;
+                    next(err);
+                })       
+            
+            }
+        
 });
 
 //Delete a Course
@@ -237,16 +223,6 @@ router.delete('/:id', authenticate, (req, res, next) => {
                 err.status = 400;
                 next(err);
             }
-        })
-        .catch(err => {
-            if (err.name === "SequelizeValidationError") {
-                err.message = "All data must be entered";
-                err.status = 400;
-                next(err);
-            } else {
-                err.status = 400;
-                next(err);
-            } 
         })
 });
 

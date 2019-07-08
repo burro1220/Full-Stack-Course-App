@@ -14,7 +14,6 @@ class CourseDetail extends Component {
         courseId: "",
         createdBy: "",
         publishedBy: "",
-        validationErrors: ""
     }
 
     //Fetch Course info when CourseDetail Component mounts
@@ -46,9 +45,11 @@ class CourseDetail extends Component {
             })
             //Handle Error
             .catch( err => {
-              
-              //If Course isn't found redirect to /notfound
-              if(err.response.status === 404) {
+
+              if(err.response){
+
+                //If Course isn't found redirect to /notfound
+                if(err.response.status === 404) {
                 this.props.history.push("/notfound");
               
                 //Handle request errors
@@ -56,6 +57,7 @@ class CourseDetail extends Component {
 
                 const error = err.response.data.message;
                     
+                //Store error in state
                     this.setState({
                         validationErrors: error
                     })
@@ -67,6 +69,10 @@ class CourseDetail extends Component {
                 this.props.history.push("/error");
                 
               }
+
+              }
+              
+              
               
             })
     };

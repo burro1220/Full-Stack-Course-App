@@ -15,7 +15,7 @@ class UpdateCourse extends Component {
         materialsNeeded:"",
         userId: "",
         createdBy:"",
-        validationErrors:""
+        validationErrors: ""
     }
 
     //Fetch Course info when CourseUpdate Component mounts
@@ -64,26 +64,35 @@ class UpdateCourse extends Component {
                         estimatedTime: course.estimatedTime,
                         materialsNeeded: course.materialsNeeded,
                         userId: course.userId,
-                        validationErrors:''
+                       
                     })
                 }
                 
             })
             //Handle Error
             .catch( err => {
+
+                if(err.response) {
+
+                    //If Course isn't found redirect to /notfound
+                    if(err.response.status === 404) {
+                    this.props.history.push("/notfound");
+                  
+                  } else {
+    
+                    //Unhandled Error
+                    console.log(err);
+                    this.props.history.push("/error");
+                    
+                  }
+                
               
-                //If Course isn't found redirect to /notfound
-                if(err.response.status === 404) {
-                  this.props.history.push("/notfound");
                 
                 } else {
-  
-                  //Unhandled Error
-                  console.log(err);
-                  this.props.history.push("/error");
-                  
+                   //Unhandled Error
+                   console.log(err);
+                   this.props.history.push("/error"); 
                 }
-                
               });
     };
 
@@ -130,7 +139,8 @@ class UpdateCourse extends Component {
                         description:"",
                         estimatedTime:"",
                         materialsNeeded:"",
-                        userId: ""
+                        userId: "",
+                        validationErrors: ""
                     });
                     
                     
@@ -138,7 +148,6 @@ class UpdateCourse extends Component {
                 }
                     
                })
-
                 //Handle errors
                 .catch( err => {
 
@@ -149,6 +158,7 @@ class UpdateCourse extends Component {
                         if(err.response.status === 400) {
                             
                             const errors = err.response.data.message;
+                            
 
                             this.setState({
                                 validationErrors: errors
@@ -163,12 +173,7 @@ class UpdateCourse extends Component {
                             this.props.history.push("/error");
                         }
 
-                    } else {
-
-                        //Unhandled Server Error
-                        console.log(err);
-                        this.props.history.push("/error");
-                    }                 
+                    }              
 
                     
                 })
@@ -184,12 +189,13 @@ class UpdateCourse extends Component {
     render(){
 
         const { title, description, estimatedTime, materialsNeeded, validationErrors } = this.state;
+        //const validationErrorsList = validationErrors.map( error => <li key={error}>{error}</li>)
 
         return(
                 <div className="bounds course--detail">
                     <h1>Update Course</h1>
                         <div>
-                        {validationErrors?(
+                        {(validationErrors)?(
                             <div>
                                 <h2 className="validation--errors--label">Validation errors</h2>
                                 <div className="validation-errors">
@@ -210,7 +216,7 @@ class UpdateCourse extends Component {
                                                 type="text" 
                                                 className="input-title course--title--input" 
                                                 placeholder="Course title"
-                                                defaultValue={title}
+                                                value={title}
                                                 onChange={this.handleInputChange} 
                                             />
                                         </div>
