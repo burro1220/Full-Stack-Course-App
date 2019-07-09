@@ -127,6 +127,7 @@ router.post("/", authenticate, (req, res, next) => {
                 .catch (err => {
                     if (err.name === "SequelizeValidationError") {
                         const errorArray = err.errors;
+                        console.log(errorArray);
                         const errorMessages = errorArray.map( error => error.message);
                         err.message = errorMessages;
                         err.status = 400;

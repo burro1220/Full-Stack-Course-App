@@ -115,16 +115,21 @@ class CreateCourse extends Component {
         
         //Destructure
         const { title, description, estimatedTime, materialsNeeded, validationErrors} = this.state;
-        const errors = this.state.validationErrors;
+
+        let validationErrorList = "";
         
-        //Found this here: https://reactjs.org/docs/lists-and-keys.html
-        const validationErrorList = errors.map( error => <li key={error.toString()}>{error}</li>)
+        if(validationErrors) {
+
+          
+          //Found this here: https://reactjs.org/docs/lists-and-keys.html
+          validationErrorList = validationErrors.map( error => <li key={error.toString()}>{error}</li>);    
+        }        
 
         return (
                     <div className="bounds course--detail">
                         <h1>Create Course</h1>
                             <div>
-                            {(validationErrorList.length > 0)?(
+                            {validationErrors?(
                                 <div>
                                     <h2 className="validation--errors--label">Validation errors</h2>
                                     <div className="validation-errors">

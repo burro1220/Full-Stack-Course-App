@@ -52,18 +52,11 @@ class UserSignUp extends Component {
         //Destructure
         const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
 
-        //Check for empty password
-        if (password === "") {
-            this.setState({
-                validationErrors:"You must enter a password."
-            })
-        }
-
         //Check if passwords match
-        else if( password !== confirmPassword ) {
+        if((password !== confirmPassword) || (password === '') ) {
 
             this.setState({
-                validationErrors: "Passwords do not match."
+                validationErrors: "Either you left a password blank or passwords do not match."
             })
             
             
@@ -95,20 +88,27 @@ class UserSignUp extends Component {
             //Catch error
             .catch(err => {
 
-                //Handle request errors
-                if(err.response.status === 400){
-               
-                    const error = err.response.data.message;
-                    
-                    this.setState({
-                        validationErrors: error
-                    });
-                
-                } else if(err.response.status === 500){
+                if(err.response){
 
-                    //Send unhandled server to /error
+                    //Handle request errors
+                    if(err.response.status === 400){
+
+                        console.log(err.response)
+                
+                        // const errors = err.response;
+                        
+                        // this.setState({
+                        //     validationErrors: errors
+                        // });
+                    
+                    }  
+                } else {
+
+                    //Redirect to error page
                     this.props.history.push("/error");
                 }
+
+                
             });
             
         } 
@@ -130,7 +130,7 @@ class UserSignUp extends Component {
                                         <h2 className="validation--errors--label">Validation errors</h2>
                                         <div className="validation-errors">
                                             <ul>
-                                                <li>{validationErrors}</li>
+                                                {validationErrors}
                                             </ul>
                                         </div>
                                     </div>

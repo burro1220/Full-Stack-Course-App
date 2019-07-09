@@ -20,10 +20,11 @@ router.get("/", authenticate, (req, res) => {
 // POST Create User
 router.post("/", (req, res, next) => {
     const info = req.body;
+    
         
     //If email address is undefined 
     if (!info.emailAddress) {
-        const err = new Error('You have not entered sufficient credentials');
+        const err = new Error('You must enter an email address');
         err.status = 400;
         next(err);
 
@@ -51,17 +52,12 @@ router.post("/", (req, res, next) => {
                         res.location('/');
                         res.status(201).end();
                     })
-                    //Catch error and check if Sequelize validation  error (not using) and pass error to next middleware
+                    //Catch error and check if Sequelize validation  error and pass error to next middleware
                     .catch (err => {
-                        console.log(err.name);
-                        if (err.name === "SequelizeValidationError") {
-                            err.message = "All data must be entered";
+                            console.log(err)      
                             err.status = 400;
                             next(err);
-                        } else {
-                            err.status = 400;
-                            next(err);
-                        }
+                        
                     });
                 } 
     });
